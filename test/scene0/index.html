@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html>
+<!--
+http://13.250.153.17:3000/test/scene0/
+Scene 0, 1 completed on desktop VR
+need to test on VIVE
+
+know bugs
+ - Slow framerate on Mobile ~7fps
+ - blink video trigger video player on IOS
+
+ TODO
+  - Start page click method and position (optimze for mobile)
+
+-->
+<head>
+    <meta charset="utf-8">
+    <title>Scene 0</title>
+    <meta name="description" content="Scene 0">
+    <script src="scripts/aframe-0.7.1.min.js"></script>
+    <script src="scripts/aframe-animation-component-3.0.1.min.js"></script>
+    <script src="scripts/aframe-event-set-component-3.0.1.min.js"></script>
+    <script src="scripts/aframe-layout-component-3.0.1.min.js"></script>
+    <script src="scripts/aframe-template-component-3.1.1.min.js"></script>
+    <script src="scripts/jquery-3.3.1.min.js"></script>
+    <!-- script src="scripts/bootstrap-3.3.7.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script -->
+    <script src="scripts/bootstrap-3.3.7.min.js" crossorigin="anonymous"></script>
+    <script src="scripts/aframe-preloader-component-1.0.0.min.js"></script>
+
+    <script src="scripts/set-image.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'msjh';
+            src: url('src/msjh.ttf');
+        }
+        #s1BlinkCanvas{
+          position: absolute;
+          z-index: 1;
+          height: 0%;
+          width: 0%;
+          overflow: hidden;
+
+        }
+        #begindiv{
+
+        }
+        #begin{
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          z-index: 15;
+          top: 50%;
+          left: 50%;
+          margin: -50px 0 0 -50px;
+          z-index: 1;
+          background-color: #000;
+          border: 3px solid red;
+          color: white;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 18px;
+          cursor: pointer;
+          overflow: hidden;
+
+        }
+    </style>
+    <script>
+    //share
+    function begin(){
+
+      document.querySelector('#entity-s0c0-logo0').emit('fadeIn');
+      document.querySelector('#entity-s0c0-logo1').emit('fadeIn');
+
+      $('#bgms0')[0].play();
+
+      $('#begin').fadeOut(1000);
+      $("#soundComplete")[0].play();
+      $("#soundComplete")[0].pause();
+
+      $("#soundHover")[0].play();
+      $("#soundHover")[0].pause();
+      $('#s1c1-video')[0].play();
+      $('#s1c1-video')[0].pause();
+      $('#s1c3-video')[0].play();
+      $('#s1c3-video')[0].pause();
+
+      $('#bgms1')[0].play();
+      $('#bgms1')[0].pause();
+      $('#s1babycry')[0].play();
+      $('#s1babycry')[0].pause();
+    }
+
+    var sceneStage = 0;
+    /*
+            =======================
+            ======= Scene 0 =======
+            =======================
+            */
+
+    //script-s0c0
+
+    var s0prevTime = 0;
+    var isBegin = false;
+    var counter = 0;
+    var counterConst = "";
+
+
+    AFRAME.registerComponent('script-s0c0', {
+
+        dependencies: ['raycaster'],
+        schema: {
+            type: 'selector'
+        },
+        init: function() {
+            var canvas = this.canvas = this.data;
+            var ctx = this.ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgb(0, 0, 0)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            isBegin = false;
+
+        },
+        tick: function(t) {
+          if(sceneStage == 0) {
+
+            var data = this.data; // Component property values.
+            var el = this.el; // Reference to the component's entity.
+
+            var canvas = this.canvas;
+            var ctx = this.ctx;
+
+            $('#lastLogo').bind("animationend", function() {
+                if (isBegin == false) {
+
+                    document.querySelector('#entity-s0c0').emit('fadeIn');
+                    //document.querySelector('#entity-s0c0Text').emit('fade');
+
+                    console.log("Canvas Begin");
+                    counterConst = 3;
+                    isBegin = true;
+                }
+            })
+
+            ctx.fillStyle = 'rgb(10, 10, 10)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = "60px msjh";
+            ctx.fillStyle = 'rgb(255, 255, 255)';
+            ctx.fillText("請凝視字幕長方形範圍", canvas.width / 2 - 290, 250);
+            ctx.fillText("你的人生就會開始推進", canvas.width / 2 - 290, 350);
+
+            var op = $('#entity-s0c0').attr("material");
+            $('#countDown').attr("opacity", op['opacity']);
+            if ($('#countDown').attr("data-count") === "up" && isBegin && op['opacity'] >= 1.0) {
+                countDown();
+            } else {
+                countUp();
+            }
+            $('#countDown').attr("value", counter);
+
+            function countUp() {
+
+                s0prevTime = Math.round(t / 1000);
+                if (isBegin) {
+                    counter = counterConst; //stay counterConst when fade in
+                } else {
+                    counter = 0; //stay 0 when fade out
+                }
+            }
+
+            function countDown() {
+                counter = Math.round(counterConst - ((t / 1000) - s0prevTime));
+                if (counter <= 0) {
+                    counter = 0;
+                    document.querySelector('#entity-s0c0').emit('fadeOut');
+                    document.querySelector('#countDown').emit('fadeOut');
+
+                    document.querySelector('#entity-s0c1Sub').emit('fadeIn');
+                    document.querySelector('#entity-s0c1').emit('fadeIn');
+                    isBegin = false;
+
+                    $("#soundComplete")[0].play();
+
+                }
+
+            }
+        }
+      }
+    });
+
+    //script-s0c1
+    var s0c1fillCounter = 0;
+    var s0prevTime2 = 0;
+    AFRAME.registerComponent('script-s0c1', {
+
+        dependencies: ['raycaster'],
+        schema: {
+            type: 'selector'
+        },
+        init: function() {
+            var canvas = this.canvas = this.data;
+            var ctx = this.ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgb(0, 0, 0)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        },
+        tick: function(t) {
+          if(sceneStage == 0) {
+            var data = this.data; // Component property values.
+            var el = this.el; // Reference to the component's entity.
+
+            var canvas = this.canvas;
+            var ctx = this.ctx;
+
+            ctx.fillStyle = 'rgb(0, 0, 0)';
+            ctx.fillRect(10, 10, canvas.width - 10, canvas.height - 10);
+            ctx.lineWidth = 40;
+            ctx.strokeStyle = 'rgb(255, 0, 0)';
+            ctx.strokeRect(10, 10, canvas.width - 10, canvas.height - 10);
+
+            ctx.font = "120px msjh";
+            ctx.fillStyle = 'rgb(255, 0, 0)';
+            ctx.textAlign = "center";
+            ctx.fillText("開始", canvas.width / 2, canvas.height - 100);
+
+            var op = $('#entity-s0c1').attr("material");
+
+            if ($('#s0c1').attr("data-count") === "fill" && op['opacity'] >= 1) {
+                fillR();
+            } else {
+                if (op['opacity'] >= 1) {
+                    unfillR();
+                }
+            }
+            ctx.fillStyle = 'rgb(255, 0, 0)';
+            ctx.fillRect(10, 10, canvas.width - 10, s0c1fillCounter);
+
+            function fillR() {
+                //var d = (t / 400) - s0prevTime2;
+                if (s0c1fillCounter < (canvas.height - 10)) {
+                    s0c1fillCounter += 10;
+                } else if (s0c1fillCounter >= (canvas.height - 10)) {
+                    document.querySelector('#entity-s0c1Sub').emit('fadeOut');
+                    document.querySelector('#entity-s0c1').emit('fadeOut');
+                    document.querySelector('#entity-s1c0').emit('fadeIn');
+                    $("#soundComplete")[0].play();
+                    sceneStage = 1;
+
+                }
+            }
+
+            function unfillR() {
+                //s0prevTime2 = t / 400;
+                s0c1fillCounter -= 4;
+                if (s0c1fillCounter <= 0) {
+                    s0c1fillCounter = 0;
+                }
+            }
+        }
+      }
+    });
+
+    AFRAME.registerComponent('script-s0c1-sub', {
+
+        dependencies: ['raycaster'],
+        schema: {
+            type: 'selector'
+        },
+        init: function() {
+            var canvas = this.canvas = this.data;
+            var ctx = this.ctx = canvas.getContext('2d');
+        },
+        tick: function(t) {
+          if(sceneStage == 0) {
+            var data = this.data; // Component property values.
+            var el = this.el; // Reference to the component's entity.
+
+            var canvas = this.canvas;
+            var ctx = this.ctx;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "60px msjh";
+            ctx.fillStyle = 'rgb(255, 255, 255)';
+            ctx.fillText("請把紅色標示移進", 250, canvas.height - 250);
+            ctx.fillText("  紅線框開始遊戲", 250, canvas.height - 100);
+        }
+      }
+    });
+
+
+    /*
+    =======================
+    ======= Scene 1 =======
+    =======================
+    */
+
+
+
+
+    var s1c0prevTime = 0;
+    var s1c0text_op = [0, 0, 0, 0, 0];
+    var s1c0playVid = true;
+
+    AFRAME.registerComponent('script-s1c0', {
+
+        dependencies: ['raycaster'],
+        schema: {
+            type: 'selector'
+        },
+        init: function() {
+            var canvas = this.canvas = this.data;
+            var ctx = this.ctx = canvas.getContext('2d');
+
+        },
+        tick: function(t) {
+          if(sceneStage == 1) {
+            var data = this.data; // Component property values.
+            var el = this.el; // Reference to the component's entity.
+
+            var canvas = this.canvas;
+            var ctx = this.ctx;
+
+            var heartbeatVid = $('#s1c1-video')[0];
+            var op = $('#entity-s1c0').attr("material");
+
+            if (op['opacity'] >= 1) {
+                var timeDiff = t - s1c0prevTime;
+                if (timeDiff < 5000) {
+                    if (s1c0text_op[0] < 1) {
+                        s1c0text_op[0] += 0.01;
+                    }
+
+                } else if (timeDiff < 10000) {
+                    if (s1c0text_op[1] < 1) {
+                        s1c0text_op[1] += 0.01;
+                    }
+
+                } else if (timeDiff < 14000) {
+                    if (s1c0text_op[0] > 0) {
+                        s1c0text_op[0] -= 0.01;
+                    }
+                    if (s1c0text_op[1] > 0) {
+                        s1c0text_op[1] -= 0.01;
+                    }
+                } else if (timeDiff < 18000) {
+                    if (s1c0playVid) {
+                        //  $('#s1c1-video')[0].play();
+
+                        heartbeatVid.play();
+
+
+                        s1c0playVid = false;
+                    }
+                    if (s1c0text_op[2] < 1) {
+                        s1c0text_op[2] += 0.01;
+                    }
+                } else if (timeDiff < 22000) {
+                    if (s1c0text_op[2] > 0) {
+                        s1c0text_op[2] -= 0.01;
+                    }
+                } else if (timeDiff < 26000) {
+                    if (s1c0text_op[3] < 1) {
+                        s1c0text_op[3] += 0.01;
+                    }
+                } else if (timeDiff < 30000) {
+                    if (s1c0text_op[3] > 0) {
+                        s1c0text_op[3] -= 0.01;
+                    }
+                } else if (timeDiff < 34000) {
+                    if (s1c0text_op[4] < 1) {
+                        s1c0text_op[4] += 0.01;
+                        document.querySelector('#entity-s1c1').emit('fadeIn');
+                    }
+
+                } else if (timeDiff < 38000) {
+
+                    //done n select box
+                } else if (timeDiff < 42000) {
+                    //  document.querySelector('#entity-s1c0').emit('fadeOut');
+                }
+            } else {
+                s1c0prevTime = t;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.drawImage(heartbeatVid, 0, 0, canvas.width, canvas.height);
+
+            ctx.font = "28px msjh";
+
+            ctx.textAlign = "center";
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c0text_op[0] + ')';
+            ctx.fillText("- 你來了 -", canvas.width / 2, 1000);
+            ctx.font = "24px msjh";
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c0text_op[1] + ')';
+            ctx.fillText("一切，無聲無息，無從解釋", canvas.width / 2, 1200);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c0text_op[2] + ')';
+            ctx.fillText("漸漸的，你開始聽到心臟微微跳動", canvas.width / 2, 1000);
+            ctx.fillText("感受到身體被一種暖流包裹", canvas.width / 2, 1050);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c0text_op[3] + ')';
+            ctx.fillText("生命，悄悄滋長 ……", canvas.width / 2, 1000);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c0text_op[4] + ')';
+            ctx.fillText("你願意來到這個世界", canvas.width / 2, 1000);
+            ctx.fillText("經歷這一趟人生旅程嗎？", canvas.width / 2, 1050);
+
+        }
+      }
+    });
+
+    var s1c1fillCounter = 0;
+    AFRAME.registerComponent('script-s1c1', {
+
+        dependencies: ['raycaster'],
+        schema: {
+            type: 'selector'
+        },
+        init: function() {
+            var canvas = this.canvas = this.data;
+            var ctx = this.ctx = canvas.getContext('2d');
+        },
+        tick: function(t) {
+          if(sceneStage == 1) {
+
+            var data = this.data; // Component property values.
+            var el = this.el; // Reference to the component's entity.
+
+            var canvas = this.canvas;
+            var ctx = this.ctx;
+
+
+            ctx.fillStyle = 'rgb(0, 0, 0)';
+            ctx.fillRect(10, 10, canvas.width - 10, canvas.height - 10);
+            ctx.lineWidth = 40;
+            ctx.strokeStyle = 'rgb(255, 0, 0)';
+            ctx.strokeRect(10, 10, canvas.width - 10, canvas.height - 10);
+
+            ctx.font = "120px msjh";
+            ctx.fillStyle = 'rgb(255, 0, 0)';
+            ctx.textAlign = "center";
+            ctx.fillText("我願意", canvas.width / 2, canvas.height - 100);
+
+            var op = $('#entity-s1c1').attr("material");
+
+            if ($('#s1c1').attr("data-count") === "fill" && op['opacity'] >= 1) {
+                fillR();
+            } else {
+                if (op['opacity'] >= 1) {
+                    unfillR();
+                }
+            }
+            ctx.fillStyle = 'rgb(255, 0, 0)';
+            ctx.fillRect(10, 10, canvas.width - 10, s1c1fillCounter);
+
+            function fillR() {
+                //var d = (t / 400) - s0prevTime2;
+                if (s1c1fillCounter < (canvas.height - 10)) {
+                    s1c1fillCounter += 10;
+                } else if (s1c1fillCounter >= (canvas.height - 10)) {
+
+                    document.querySelector('#entity-s1c1').emit('fadeOut');
+                    document.querySelector('#entity-s1c0').emit('fadeOut');
+
+                    document.querySelector('#entity-s1c2').emit('fadeIn');
+                    $('#sky').attr('src','#s1sky0');
+                    $('#sky').removeAttr('color');
+                    $('#sky').attr('rotation','0 190 0');
+
+                    $("#soundComplete")[0].play();
+                    $('#s1c1-video')[0].pause();  //heartbeatVid
+
+
+                    //bgm change
+                    $('#bgms0')[0].pause();
+                    $('#bgms1')[0].play();
+
+                    $('#s1babycry')[0].play();
+
+                    $('#s1c3-video')[0].play();
+
+                    $('#cursor').remove();
+                    $('#cameracursor').append('<a-entity id="cursor" position="0 0 -1" cursor geometry="primitive: plane; width: 3.5; height: 2." material="src: #s1BlinkCanvas; opacity: 1 ;transparent:true"></a-entity>');
+
+                    sceneStage = 2;
+                }
+            }
+
+            function unfillR() {
+                s1c1fillCounter -= 4;
+                if (s1c1fillCounter <= 0) {
+                    s1c1fillCounter = 0;
+                }
+            }
+        }
+      }
+    });
+
+    var s1c2prevTime = 0;
+    var s1c2text_op = [0, 0, 0, 0, 0];
+    var s1c2playVid = true;
+
+    AFRAME.registerComponent('script-s1c2', {
+
+        dependencies: ['raycaster'],
+        schema: {
+            type: 'selector'
+        },
+        init: function() {
+            var canvas = this.canvas = this.data;
+            var ctx = this.ctx = canvas.getContext('2d');
+
+        },
+        tick: function(t) {
+          if(sceneStage == 2) {
+            var data = this.data; // Component property values.
+            var el = this.el; // Reference to the component's entity.
+
+            var canvas = this.canvas;
+            var ctx = this.ctx;
+
+            var op = $('#entity-s1c2').attr("material");
+
+            if (op['opacity'] >= 1) {
+                var timeDiff = t - s1c2prevTime;
+                if (timeDiff < 5000) {
+                    if (s1c2text_op[0] < 1) {
+                        s1c2text_op[0] += 0.01;
+                    }
+
+                } else if (timeDiff < 10000) {
+                    if (s1c2text_op[1] < 1) {
+                        s1c2text_op[1] += 0.01;
+                    }
+
+                } else if (timeDiff < 14000) {
+                    if (s1c2text_op[0] > 0) {
+                        s1c2text_op[0] -= 0.01;
+                    }
+                    if (s1c2text_op[1] > 0) {
+                        s1c2text_op[1] -= 0.01;
+                    }
+                } else if (timeDiff < 18000) {
+                    if (s1c2playVid) {
+                        s1c2playVid = false;
+                    }
+                    if (s1c2text_op[2] < 1) {
+                        s1c2text_op[2] += 0.01;
+                    }
+                } else if (timeDiff < 22000) {
+                    if (s1c2text_op[2] > 0) {
+                        s1c2text_op[2] -= 0.01;
+                    }
+                } else if (timeDiff < 26000) {
+                    if (s1c2text_op[3] < 1) {
+                        s1c2text_op[3] += 0.01;
+                    }
+                } else if (timeDiff < 30000) {
+                    if (s1c2text_op[3] > 0) {
+                        s1c2text_op[3] -= 0.01;
+                    }
+                } else if (timeDiff < 34000) {
+                    if (s1c2text_op[4] < 1) {
+                        s1c2text_op[4] += 0.01;
+                      //  document.querySelector('#entity-s1c1').emit('fadeIn');
+                    }
+
+                } else if (timeDiff < 38000) {
+
+                    //done n select box
+                } else if (timeDiff < 42000) {
+                    //  document.querySelector('#entity-s1c0').emit('fadeOut');
+                }
+            } else {
+                s1c2prevTime = t;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = "65px msjh";
+
+            ctx.textAlign = "center";
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c2text_op[0] + ')';
+            ctx.fillText("你", canvas.width / 2, 100);
+            ctx.fillText("初生於這個家的小男孩", canvas.width / 2, 200);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c2text_op[1] + ')';
+            ctx.fillText("有關生活的需要，衣服、食物、玩具 ……", canvas.width / 2, 100);
+            ctx.fillText("你爸爸媽媽都為你準備好", canvas.width / 2, 200);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c2text_op[2] + ')';
+            ctx.fillText("即使你討厭牛奶的味道", canvas.width / 2, 100);
+            ctx.fillText("媽媽卻每天早上為你準備 ……", canvas.width / 2, 200);
+
+
+            ctx.fillText("不情願地", canvas.width / 2, 300);
+            ctx.fillText("喝一口,", canvas.width / 2, 400);
+            ctx.fillText("閉上眼睛,一口喝完", canvas.width / 2, 500);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c2text_op[3] + ')';
+            ctx.fillText("生命，悄悄滋長 ……", canvas.width / 2, 1000);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + s1c2text_op[4] + ')';
+            ctx.fillText("你願意來到這個世界", canvas.width / 2, 1000);
+            ctx.fillText("經歷這一趟人生旅程嗎？", canvas.width / 2, 1050);
+          }
+        }
+    });
+var s3Once = true;
+    AFRAME.registerComponent('script-s1c3', {
+        schema: {
+            type: 'selector'
+        },
+        init: function() {
+            var canvas = this.canvas = this.data;
+           var ctx = this.ctx = canvas.getContext('2d');
+
+        },
+        tick: function(t) {
+          if(sceneStage == 2) {
+           var canvas = this.canvas;
+            var ctx = this.ctx;
+
+    //VIDEO with Alpha Channel
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            var video = $('#s1c3-video')[0];
+            var op = $('#entity-s1c2').attr("material");
+
+            if (op['opacity'] >= 1) {
+              if(s3Once){
+              video.pause();
+              $( "#s1BlinkDiv" ).remove();
+              $( "#s1c3-video" ).remove();
+              $( "#entity-s1c3" ).remove();
+          //    $( "#cursor" ).add({"animation__click":"property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150" ,"animation__fusing":"property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500", "event-set__1":"_event: mouseenter; color: springgreen","event-set__2":"_event: mouseleave; color: white", "material":"color: white"});
+          //    $( "#cursor" ).remove("geometry");
+              $('#cursor').remove();
+              $("#cameracursor").append('<a-cursor id="cursor" animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150" animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500" event-set__1="_event: mouseenter; color: springgreen" event-set__2="_event: mouseleave; color: white" fuse="true" raycaster="objects: .link" material="color: white"></a-cursor>');
+
+              console.log('s1BlinkCanvas out');
+              s3Once = false;
+            }
+            }
+
+
+            if(s3Once){
+              var bufferCanvas = document.getElementById('s1c3');
+              var buffer = bufferCanvas.getContext('2d');
+              var width = canvas.width,
+              height = canvas.height
+
+              buffer.drawImage(video, 0, 0);
+             //ctx.drawImage(video, 0, 0);
+              var image = ctx.getImageData(0, 0, width, height),
+               imageData = image.data,
+               alphaData = buffer.getImageData(0, 0, width, height).data;
+
+               for (var i = 3, len = imageData.length; i < len; i = i + 4) {
+               imageData[i] = alphaData[i-1];
+               }
+
+               ctx.putImageData(image, 0, 0, 0, 0, width, height);
+             }
+        }
+      }
+    });
+
+
+
+    </script>
+
+
+
+</head>
+
+<body>
+  <div id="s1BlinkDiv">
+    <!-- canvas id="s1BlinkCanvas" crossOrigin="anonymous" width="640" height="360"></canvas -->
+  </div>
+
+    <div id="begindiv style="width:800px; margin:0 auto;">
+      <button id="begin" onclick="begin()">開始</button>
+    </div>
+    <a-scene preloader stats>
+      <!-- a-scene preloader -->
+
+        <a-assets>
+            <!-- Media Sources -->
+
+
+
+            <!-- Background Music -->
+            <audio loop preload="true" id="bgms0" crossorigin="anonymous" src="src/BGM_Scene_00_20150125_playonce_v2.mp3"></audio>
+            <audio loop preload="true" id="bgms1" crossorigin="anonymous" src="src/BGM_Scene_01_20150125_loop.mp3"></audio>
+
+
+            <!-- Red Button Sound Effects -->
+            <audio preload="true" id="soundComplete" crossorigin="anonymous" src="src/SFX_system_gazeSelectionComplete.mp3"></audio>
+            <audio preload="true" id="soundHover" crossorigin="anonymous" src="src/SFX_system_gazeHover.mp3"></audio>
+
+            <!-- Video -->
+            <video id="s1c1-video" loop preload="true" crossorigin="anonymous" webkit-playsinline>
+              <source src="src/HeartBeatFinal_withSound.mp4" autostart="false">
+            </video>
+            <video id="s1c3-video" preload="true" crossorigin="anonymous" webkit-playsinline>
+              <source src="src/blink_.mp4" autostart="false">
+            </video>
+
+            <!-- =========== Scene 0 ===========  -->
+            <!-- LOGO -->
+            <img id="title0" preload="true" crossorigin="anonymous" src="src/title0.jpg">
+            <img id="title1" preload="true" crossorigin="anonymous" src="src/title1.jpg">
+            <canvas id="s0c0" crossorigin="anonymous" width="1920" height="1080"></canvas>
+            <canvas id="s0c1" crossorigin="anonymous" width="1080" height="1080" data-count=""></canvas>
+            <canvas id="s0c1sub" crossorigin="anonymous" width="1000" height="500" data-count=""></canvas>
+
+            <!-- =========== Scene 1 ===========  -->
+            <canvas id="s1c0" crossorigin="anonymous" width="3840" height="2160" data-count=""></canvas>
+            <canvas id="s1c1" crossorigin="anonymous" width="1080" height="1080" data-count=""></canvas><!-- Button -->
+            <canvas id="s1c2" crossorigin="anonymous" width="1920" height="1080" data-count=""></canvas>
+
+            <canvas id="s1c3" crossOrigin="anonymous" width="960" height="540" ></canvas>
+            <canvas id="s1c4" crossorigin="anonymous" width="1080" height="1080" data-count=""></canvas><!-- Button -->
+            <canvas id="s1c5" crossorigin="anonymous" width="1080" height="1080" data-count=""></canvas>
+            <canvas id="s1BlinkCanvas" crossOrigin="anonymous" width="640" height="360"></canvas>
+            <img id="s1sky0" preload="true" crossorigin="anonymous" src="src/sc01_living_rm.jpg">
+            <img id="s1sky1" preload="true" crossorigin="anonymous" src="src/sc01_living_rm_5yrOld.jpg">
+            <audio loop preload="true" id="s1babycry" crossorigin="anonymous" src="src/SFX Bounced_Sc01_Q2_babyCry.mp3"></audio>
+
+        </a-assets>
+
+
+        <!-- Scene 0 -->
+        <!-- LOGO -->
+        <a-entity id="entity-s0c0-logo0" class="logo" geometry="primitive: plane; width: 4; height: 2.25" material="shader: flat; src: #title0; opacity: 0"  position="0 0 -4">
+          <a-animation attribute="material.opacity" from="0" to="1" dur="3000" delay="1000" begin="fadeIn"></a-animation>
+          <a-animation attribute="material.opacity" from="1.0" to="0" dur="3000" delay="4000" begin="fadeIn"></a-animation>
+        </a-entity>
+        <a-entity id="entity-s0c0-logo1" class="logo" geometry="primitive: plane; width: 4; height: 2.25" material="shader: flat; src: #title1; opacity: 0"  position="0 0 -4">
+          <a-animation attribute="material.opacity" from="0" to="1" dur="3000" delay="8000" begin="fadeIn"></a-animation>
+          <a-animation id="lastLogo" attribute="material.opacity" from="1.0" to="0" dur="3000" delay="12000" trigger-canvas0="" begin="fadeIn"></a-animation>
+        </a-entity>
+
+        <!-- First Canvas -->
+        <a-entity class="link" id="entity-s0c0" event-set__enter="_event: mouseenter; _target: #countDown; visible: true; data-count: up" event-set__leave="_event: mouseleave; _target: #countDown; visible: true; data-count: dn" material="shader: flat; src: #s0c0; opacity: 0; transparent:true"
+            geometry="primitive: plane; width: 32; height: 18" position="0 0 -3.9" scale="0.2 0.2 0.2" script-s0c0="#s0c0">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="3000" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="3000" begin="fadeOut"></a-animation>
+        </a-entity>
+        <!-- First Canvas Countdown Numbers-->
+        <a-text id="countDown" value="" align="center" color="#FFF" visible="true" position="0 -1 -3.5" scale="0.9 0.9 0.9" data-count="up" opacity=0>
+            <a-animation attribute="position" to="0 -20 -3.8" dur="1000" delay="3000" begin="fadeOut"></a-animation>
+        </a-text>
+
+        <!-- Second Canvas -->
+        <a-entity class="link" id="entity-s0c1Sub" material="shader: flat; src: #s0c1sub; opacity: 0; transparent:true" geometry="primitive: plane; width: 12; height: 6" position="0 1 -3.8" scale="0.25 0.25 0.25" script-s0c1-sub="#s0c1sub">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="3000" delay="3000" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="3000" begin="fadeOut"></a-animation>
+        </a-entity>
+        <!-- Second Canvas Red Button-->
+        <a-entity class="link" id="entity-s0c1" event-set__enter="_event: mouseenter; _target: #s0c1; visible: true; data-count: fill" event-set__leave="_event: mouseleave; _target: #s0c1; visible: true; data-count: unfill" material="shader: flat; src: #s0c1; opacity: 0; transparent:true"
+            geometry="primitive: plane; width: 12; height: 12" position="0 -20 -3.8" scale="0.15 0.15 0.15" script-s0c1="#s0c1" sound__2="on: mouseenter; src: #soundHover;">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="3000" delay="3000" begin="fadeIn"></a-animation>
+            <a-animation attribute="position" to="0 -1 -3.8" dur="1000" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="1000" begin="fadeOut"></a-animation>
+            <a-animation attribute="position" to="0 -20 -3.8" dur="1000" delay="3000" begin="fadeOut"></a-animation>
+        </a-entity>
+
+        <!-- Scene 1 -->
+        <!-- Text and Heartbeat Video Background Canvas -->
+        <a-entity class="link" id="entity-s1c0" material="shader: flat; src: #s1c0; opacity: 0 ;transparent:true"
+            geometry="primitive: plane; width: 192; height: 108" position="0 -20 -3.8" scale="0.15 0.15 0.15" script-s1c0="#s1c0">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="1000" delay="1000" begin="fadeIn"></a-animation>
+            <a-animation attribute="position" to="0 0 -3.7" dur="100" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="1000" begin="fadeOut"></a-animation>
+            <a-animation attribute="position" to="0 -20 -3.8" dur="1000" delay="3000" begin="fadeOut"></a-animation>
+        </a-entity>
+        <!-- Red Button -->
+        <a-entity class="link" id="entity-s1c1" event-set__enter="_event: mouseenter; _target: #s1c1; visible: true; data-count: fill" event-set__leave="_event: mouseleave; _target: #s1c1; visible: true; data-count: unfill" material="shader: flat; src: #s1c1; opacity: 0; transparent:true"
+            geometry="primitive: plane; width: 12; height: 12" position="0 -20 -3.8" scale="0.15 0.15 0.15" script-s1c1="#s1c1" sound__2="on: mouseenter; src: #soundHover;">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="3000" delay="3000" begin="fadeIn"></a-animation>
+            <a-animation attribute="position" to="0 -1 -3.65" dur="1000" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="1000" begin="fadeOut"></a-animation>
+            <a-animation attribute="position" to="0 -20 -3.8" dur="1000" delay="3000" begin="fadeOut"></a-animation>
+        </a-entity>
+
+        <!-- Baby Scene Text-->
+        <a-entity class="link" id="entity-s1c2" material="shader: flat; src: #s1c2; opacity: 0 ;transparent:true"
+            geometry="primitive: plane; width: 32; height: 18" position="0 -20 -3.8" scale="0.15 0.15 0.15" script-s1c2="#s1c2">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="1000" delay="5000" begin="fadeIn"></a-animation>
+            <a-animation attribute="position" to="0 0 -3.7" dur="100" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="1000" begin="fadeOut"></a-animation>
+            <a-animation attribute="position" to="0 -20 -3.8" dur="1000" delay="3000" begin="fadeOut"></a-animation>
+        </a-entity>
+
+        <!-- Red Button Choice A -->
+        <!-- a-entity class="link" id="entity-s1c1" event-set__enter="_event: mouseenter; _target: #s1c1; visible: true; data-count: fill" event-set__leave="_event: mouseleave; _target: #s1c1; visible: true; data-count: unfill" material="shader: flat; src: #s1c1; opacity: 0; transparent:true"
+            geometry="primitive: plane; width: 12; height: 12" position="0 -20 -3.8" scale="0.15 0.15 0.15" script-s1c1="#s1c1" sound__2="on: mouseenter; src: #soundHover;">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="3000" delay="3000" begin="fadeIn"></a-animation>
+            <a-animation attribute="position" to="0 -1 -3.65" dur="1000" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="1000" begin="fadeOut"></a-animation>
+            <a-animation attribute="position" to="0 -20 -3.8" dur="1000" delay="3000" begin="fadeOut"></a-animation>
+        </a-entity -->
+        <!-- Red Button Choice B -->
+        <!-- a-entity class="link" id="entity-s1c1" event-set__enter="_event: mouseenter; _target: #s1c1; visible: true; data-count: fill" event-set__leave="_event: mouseleave; _target: #s1c1; visible: true; data-count: unfill" material="shader: flat; src: #s1c1; opacity: 0; transparent:true"
+            geometry="primitive: plane; width: 12; height: 12" position="0 -20 -3.8" scale="0.15 0.15 0.15" script-s1c1="#s1c1" sound__2="on: mouseenter; src: #soundHover;">
+            <a-animation attribute="material.opacity" from="0" to="1" dur="3000" delay="3000" begin="fadeIn"></a-animation>
+            <a-animation attribute="position" to="0 -1 -3.65" dur="1000" begin="fadeIn"></a-animation>
+            <a-animation attribute="material.opacity" from="1" to="0" dur="1000" begin="fadeOut"></a-animation>
+            <a-animation attribute="position" to="0 -20 -3.8" dur="1000" delay="3000" begin="fadeOut"></a-animation>
+        </a-entity -->
+
+
+        <a-entity id="entity-s1c3" material="shader: flat; src: #s1BlinkCanvas; opacity: 1 ;transparent:true" script-s1c3="#s1BlinkCanvas"></a-entity>
+
+
+
+        <!-- Camera + cursor -->
+        <a-entity camera look-controls id="cameracursor">
+            <a-cursor id="cursor" animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150" animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500" event-set__1="_event: mouseenter; color: springgreen"
+                event-set__2="_event: mouseleave; color: white" fuse="true" raycaster="objects: .link" material="color: white"></a-cursor>
+        </a-entity>
+
+        <!-- Sky -->
+        <a-sky id="sky" radius="30" src="" color="#000" rotation="0 0 0"></a-sky>
+    </a-scene>
+
+</body>
+
+</html>
