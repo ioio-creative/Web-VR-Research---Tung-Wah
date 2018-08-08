@@ -1,0 +1,49 @@
+<!-- saved from url=(0075)https://mayognaise.github.io/aframe-mouse-cursor-component/basic/index.html -->
+<html class="a-html gr__mayognaise_github_io">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
+    <title>A-Frame Mouse Cursor Component - Basic</title>
+    <meta aframe-injected="" name="mobile-web-app-capable" content="yes">
+    <meta aframe-injected="" name="theme-color" content="black">
+    <script src="./A-Frame Mouse Cursor Component - Basic_files/build.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="./A-Frame Mouse Cursor Component - Basic_files/common.css">
+</head>
+
+<body data-gr-c-s-loaded="true" class="a-body" cz-shortcut-listen="true">
+    <a-scene class="fullscreen" canvas="" inspector="" keyboard-shortcuts="" screenshot="" vr-mode-ui="" auto-enter-vr="">
+        <a-box position="0 3.5 -2" rotation="30 30 0" color="skyblue" event-set__enter="_event: mouseenter; material.color: yellowgreen; scale: 3 1 1" event-set__leave="_event: mouseleave; material.color: skyblue; scale: 1 1 1" scale="" visible="" material=""
+            geometry="">
+            <a-animation attribute="rotation" begin="click" dur="500" fill="backwards" to="30 30 360"></a-animation>
+        </a-box>
+
+        <a-sky color="pink" position="" rotation="" scale="" visible="" material="" geometry=""></a-sky>
+
+        <a-entity position="0 1.8 4" rotation="" scale="" visible="">
+            <a-entity camera="" look-controls="" mouse-cursor="" position="" rotation="" scale="" visible="">
+                <a-cursor fuse="true" color="yellow" position="" rotation="" scale="" visible="" material="" raycaster="" cursor="" geometry=""></a-cursor>
+            </a-entity>
+        </a-entity>
+        <a-cylinder position="1 0.75 -2" radius="0.5" height="1.5" color="#FFC65D"
+                event-set__enter="_event: mouseenter; _target: #cylinderText; visible: false"
+                event-set__leave="_event: mouseleave; _target: #cylinderText; visible: true">
+      <a-text id="cylinderText" value="This is a cylinder" align="center" color="#FFF" visible="true" position="-1 -0.55 -1"
+              geometry="primitive: plane; width: 1.75" material="color: #555"></a-text>
+    </a-cylinder>
+
+        <canvas class="a-canvas a-grab-cursor" data-aframe-canvas="true" width="1414" height="732" style="width: 1414px; height: 732px;"></canvas>
+        <div class="a-enter-vr" aframe-injected=""><button class="a-enter-vr-button" aframe-injected=""></button></div>
+        <div class="a-orientation-modal a-hidden" aframe-injected=""><button aframe-injected="">Exit VR</button></div>
+        <a-entity light="" data-aframe-default-light="" aframe-injected="" position="" rotation="" scale="" visible=""></a-entity>
+        <a-entity light="" position="" data-aframe-default-light="" aframe-injected="" rotation="" scale="" visible=""></a-entity>
+    </a-scene>
+    <div class="spacer"></div>
+    <div class="spacer2"></div>
+
+</body>
+
+</html>

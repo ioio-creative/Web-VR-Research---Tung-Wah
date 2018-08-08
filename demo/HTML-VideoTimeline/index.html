@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Test</title>
+</head>
+<body>
+  <style>
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  video, .timeline {
+    max-width: 50em;
+  }
+
+  .timeline {
+    width: 100%;
+    height: 10px;
+    background-color: black;
+    cursor: pointer;
+    position: relative;
+  }
+
+  /* Here is the dragger that I will use to move the video
+  * current time forward or backward.
+  * I have added a background color for you to see it
+  * but just remove it in production.
+  */
+
+  .timeline__drag {
+    width: 1px;
+    height: 20px;
+    top: -10px;
+    background-color: yellow;
+    position: absolute;
+    z-index: 2;
+    transform-origin: 0 0;
+  }
+
+  .timeline__progress {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: green;
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  button {
+    margin-top: 2em;
+  }
+  </style>
+
+
+
+<video>
+  <source src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" type="video/mp4">
+  </video>
+  <div class="timeline">
+    <div class="timeline__drag"></div>
+    <span class="timeline__progress"></span>
+  </div>
+  <button class="video__play">Play / Pause video</button>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.0/utils/Draggable.min.js'></script>
+
+  <script type="text/javascript">
+  var video = document.getElementsByTagName('video')[0],
+  play = document.getElementsByClassName('video__play')[0],
+  timeline = document.getElementsByClassName('timeline')[0],
+  timelineProgress = document.getElementsByClassName('timeline__progress')[0],
+  drag = document.getElementsByClassName('timeline__drag')[0];
+
+  // Toggle Play / Pause
+  play.addEventListener('click', togglePlay, false);
+
+  function togglePlay() {
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  }
+
+  // on interaction with video controls
+  video.onplay = function() {
+    TweenMax.ticker.addEventListener('tick', vidUpdate);
+  };
+  video.onpause = function() {
+    TweenMax.ticker.removeEventListener('tick', vidUpdate);
+  };
+  video.onended = function() {
+    TweenMax.ticker.removeEventListener('tick', vidUpdate);
+  };
+
+  // Sync the timeline with the video duration
+  function vidUpdate() {
+    TweenMax.set(timelineProgress, {
+      scaleX: (video.currentTime / video.duration).toFixed(5)
+    });
+    TweenMax.set(drag, {
+      x: (video.currentTime / video.duration * timeline.offsetWidth).toFixed(4)
+    });
+  }
+
+  // Make the timeline draggable
+  Draggable.create(drag, {
+    type: 'x',
+    trigger: timeline,
+    bounds: timeline,
+    onPress: function(e) {
+      video.currentTime = this.x / this.maxX * video.duration;
+      TweenMax.set(this.target, {
+        x: this.pointerX - timeline.getBoundingClientRect().left
+      });
+      this.update();
+      var progress = this.x / timeline.offsetWidth;
+      TweenMax.set(timelineProgress, {
+        scaleX: progress
+      });
+    },
+    onDrag: function() {
+      video.currentTime = this.x / this.maxX * video.duration;
+      var progress = this.x / timeline.offsetWidth;
+      TweenMax.set(timelineProgress, {
+        scaleX: progress
+      });
+    },
+    onRelease: function(e) {
+      e.preventDefault();
+    }
+  });
+  </script>
+
+
+
+</body>
+</html>

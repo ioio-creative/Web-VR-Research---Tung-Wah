@@ -1,0 +1,69 @@
+<!-- saved from url=(0046)https://etiennepinchon.github.io/aframe-fonts/ -->
+<html class="a-html gr__etiennepinchon_github_io">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>aframe-fonts🅰️📖👌</title>
+    <meta name="description" content="Aframe-Equalizer">
+    <meta aframe-injected="" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=no,minimal-ui">
+    <meta aframe-injected="" name="mobile-web-app-capable" content="yes">
+    <meta aframe-injected="" name="theme-color" content="black">
+    <script src="./font_files/aframe.min.js"></script>
+
+
+    <script src="./font_files/gradientsky.min.js"></script>
+</head>
+
+<body class="a-body" data-gr-c-s-loaded="true" cz-shortcut-listen="true">
+    <a-scene class="fullscreen" inspector="" keyboard-shortcuts="" screenshot="" vr-mode-ui="">
+        <!-- BEGIN: ENVIRONMENT -->
+        <a-gradient-sky material="shader: gradient; topColor: 255 82 82; bottomColor: 255 100 100;" position="" rotation="" scale="" visible="" geometry=""></a-gradient-sky>
+        <!-- END: ENVIRONMENT -->
+
+        <!-- BEGIN: DEMO -->
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/berkshireswash/BerkshireSwash-Regular.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/creepster/Creepster-Regular.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/crimsontext/CrimsonText-Regular.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/giveyouglory/GiveYouGlory.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/miltoniantattoo/MiltonianTattoo-Regular.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/snippet/Snippet.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/specialelite/SpecialElite-Regular.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/syncopate/Syncopate-Regular.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <a-entity text="value:Hello; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/yesteryear/Yesteryear-Regular.json;" scale="15 15 15" position="6.7 1 -2" rotation="" visible=""></a-entity>
+        <!-- END: DEMO -->
+
+        <canvas class="a-canvas a-grab-cursor" data-aframe-canvas="true" width="1269" height="732" style="width: 1269px; height: 732px;"></canvas>
+        <div class="a-enter-vr" aframe-injected=""><button class="a-enter-vr-button" title="Enter VR mode with a headset or fullscreen mode on a desktop. Visit https://webvr.rocks or https://webvr.info for more information." aframe-injected=""></button></div>
+        <div class="a-orientation-modal a-hidden"
+            aframe-injected=""><button aframe-injected="">Exit VR</button></div>
+        <a-entity position="" data-aframe-default-camera="" camera="" wasd-controls="" rotation="" look-controls="" aframe-injected="" scale="" visible=""></a-entity>
+        <a-entity light="" data-aframe-default-light="" aframe-injected="" position="" rotation="" scale="" visible=""></a-entity>
+        <a-entity light="" position="" data-aframe-default-light="" aframe-injected="" rotation="" scale="" visible=""></a-entity>
+    </a-scene>
+
+    <script type="text/javascript">
+        let els = document.querySelectorAll('[text]');
+          let current = 0, total = els.length;
+
+          let hideAll = ()=> {
+            for (let el of els) {
+              el.setAttribute('visible', false);
+            }
+          }
+
+          let show = ()=>{
+            hideAll();
+            if (current > total-1) {
+              current = 0;
+            }
+            els[current].setAttribute('visible', true);
+            current++;
+          }
+
+          show();
+          setInterval(show, 300);
+    </script>
+</body>
+
+</html>

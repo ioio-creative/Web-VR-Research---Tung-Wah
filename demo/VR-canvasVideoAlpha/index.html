@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- http://www.sciencelifeny.com/transparency/transparency.html# -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Canvas Texture</title>
+<meta name="description" content="Canvas Texture - A-Frame">
+<style type="text/css">
+
+
+#helloWorldCanvas{
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+}
+</style>
+<script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+    <script src="scripts/jquery-3.3.1.min.js"></script>
+<script >
+AFRAME.registerComponent('draw-canvas-rectangles', {
+    schema: {
+        type: 'selector'
+    },
+    init: function() {
+        var canvas = this.canvas = this.data;
+       var ctx = this.ctx = canvas.getContext('2d');
+    //  ctx.fillStyle = 'rgb(255, 0, 0,0.5)';
+      //ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    },
+    tick: function(t) {
+       var canvas = this.canvas;
+        var ctx = this.ctx;
+
+
+//VIDEO with Alpha Channel
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var video = $('#s1c1-video')[0];
+        video.play();
+
+        var bufferCanvas = document.getElementById('buffer');
+        var buffer = bufferCanvas.getContext('2d');
+        var width = canvas.width,
+        height = canvas.height
+
+        buffer.drawImage(video, 0, 0);
+       //ctx.drawImage(video, 0, 0);
+        var image = ctx.getImageData(0, 0, width, height),
+         imageData = image.data,
+         alphaData = buffer.getImageData(0, 0, width, height).data;
+
+         for (var i = 3, len = imageData.length; i < len; i = i + 4) {
+         imageData[i] = alphaData[i-1];
+         }
+
+         ctx.putImageData(image, 0, 0, 0, 0, width, height);
+
+    }
+
+
+
+
+});
+
+</script>
+</head>
+<body>
+  <div id="htmlTarget">
+    <canvas id="helloWorldCanvas" crossOrigin="anonymous" width="1920" height="1080"></canvas>
+  </div>
+<a-scene stats antialias="true" vr-mode-ui>
+<a-assets>
+
+<img id="s1sky0" preload="true" crossorigin="anonymous" src="src/sc01_living_rm.jpg">
+  <video id="s1c1-video" loop preload="true" crossorigin="anonymous" >
+    <source src="src/blink_.mp4" autostart="false">
+  </video>
+
+
+<canvas id="buffer" crossOrigin="anonymous" width="1920" height="1080" ></canvas>
+
+</a-assets>
+
+
+<a-entity id="aa" material="shader: flat; src: #helloWorldCanvas; transparent: true" geometry="primitive: plane; width: 160; height: 100" position="100 -20 -50" scale="0 0 0" draw-canvas-rectangles="#helloWorldCanvas" >
+
+
+</a-entity>
+
+<a-sky id="sky" radius="1000" src="#s1sky0" color="#FFF" rotation="0 0 0"></a-sky>
+</a-scene>
+
+
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Canvas Texture</title>
+<meta name="description" content="Canvas Texture - A-Frame">
+<script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+<script >
+AFRAME.registerComponent('draw-canvas-rectangles', {
+    schema: {
+        type: 'selector'
+    },
+    init: function() {
+        var canvas = this.canvas = this.data;
+       var ctx = this.ctx = canvas.getContext('2d');
+    //  ctx.fillStyle = 'rgb(255, 0, 0,0.5)';
+      //ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    },
+    tick: function(t) {
+       var canvas = this.canvas;
+        var ctx = this.ctx;
+        var width = 100,
+    		height = 100,
+        image = new Image();
+        image.src = 'src/sprite.png';
+        image.crossOrigin = "Anonymous";
+      //  image.src = 'http://www.onlywebpro.com/demo/gamedev/sprite.png';
+        var currentFrame = Math.round(t/100)%4;
+      //  console.log(currentFrame);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, height * currentFrame, width, height, 0, 0, width, height);
+        ctx.font = "50px Verdana";
+        ctx.fillText("Hello world", 10, 40);
+        //this update function says to update the texture in aframe
+      //  component.updateTexture();
+
+    }
+});
+</script>
+</head>
+<body>
+<a-scene stats antialias="true">
+<a-assets>
+<canvas id="helloWorldCanvas" crossOrigin="anonymous" width="1920" height="1080"></canvas>
+</a-assets>
+
+<a-entity material="shader: flat; src: #helloWorldCanvas; transparent: true" geometry="primitive: plane; width: 192; height: 108" position="40 -20 -50" scale="0.8 0.8 0.8" draw-canvas-rectangles="#helloWorldCanvas">
+
+</a-entity>
+
+
+</a-scene>
+
+
+</body>
+</html>

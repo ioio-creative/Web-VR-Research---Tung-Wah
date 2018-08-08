@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Canvas Texture</title>
+<meta name="description" content="Canvas Texture - A-Frame">
+<script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script>
+ <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+<script >
+AFRAME.registerComponent('draw-canvas-rectangles', {
+    schema: {
+        type: 'selector'
+    },
+    init: function() {
+        var canvas = this.canvas = this.data;
+        var ctx = this.ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgb(0, 0, 0)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    },
+    tick: function(t) {
+        var canvas = this.canvas;
+        var ctx = this.ctx;
+        var x;
+        var y;
+        var hue = t / 10;
+        ctx.fillStyle = 'hsl(' + hue + ', 50%, 80%)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        hue = t / 15;
+        ctx.fillStyle = 'hsl(' + hue + ', 50%, 60%)';
+        x = canvas.width / 10;
+        y = canvas.height / 10;
+        ctx.fillRect(x, y, canvas.width - x * 2, canvas.height - y * 2);
+        hue = t / 20;
+        ctx.fillStyle = 'hsl(' + hue + ', 50%, 40%)';
+        x = canvas.width / 5;
+        y = canvas.height / 5;
+        ctx.fillRect(x, y, canvas.width - x * 2, canvas.height - y * 2);
+    }
+});
+</script>
+</head>
+<body>
+<a-scene stats >
+<a-assets>
+<canvas id="helloWorldCanvas" crossOrigin="anonymous"></canvas>
+</a-assets>
+<a-entity material="shader: flat; src: #helloWorldCanvas" geometry="primitive: plane; width: 160; height: 90" position="0 60 -250" rotation="0 35 0" draw-canvas-rectangles="#helloWorldCanvas">
+
+</a-entity>
+<a-gradient-sky material="shader: gradient; topColor: 255 0 0; bottomColor: 0 121 255;"></a-gradient-sky>
+ </a-scene>
+</body>
+</a-scene>
+
+
+
+</body>
+</html>

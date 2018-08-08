@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <!-- As if this Glitch were a typical HTML CodePen... -->
+    <script src="scripts/aframe-0.7.1.min.js"></script>
+
+
+  <a-scene>
+    <a-assets>
+      <video id="s1c1-video" loop autoplay preload="true" crossorigin="anonymous" >
+        <source src="src/blink_.mp4" autostart="false">
+      </video>
+    <a-mixin id="cursor-hovering" material="color: springgreen"></a-mixin>
+  </a-assets>
+
+    <a-entity camera look-controls wasd-controls position="0 1.8 4">
+      <a-entity id="cursor" position="0 0 -1" cursor geometry="primitive: plane; width: 3.5; height: 2." material="src: #s1c1-video">
+        <a-animation begin="click" easing="ease-in" attribute="scale"
+             fill="backwards" from="1 1 1" to="1 1 1" dur="150"></a-animation>
+        <a-animation begin="fusing" easing="ease-in" attribute="scale"
+             fill="forwards" from="1 1 1" to="1 1 1" dur="1500"></a-animation>
+      </a-entity>
+    </a-entity>
+
+    <a-sphere position="0 1.25 -1" radius="1.25" color="#EF2D5E"></a-sphere>
+    <a-cube position="-1 0.5 1" rotation="0 45 0" width="1" height="1" depth="1"  color="#4CC3D9"></a-cube>
+    <a-cylinder position="1 0.75 1" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+    <a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+    <a-sky color="#ECECEC"></a-sky>
+  </a-scene>
+
+  </body>
+</html>
